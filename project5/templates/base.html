@@ -1,0 +1,38 @@
+<!-- templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prudence{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    
+    <header>
+        <nav>
+            <ul class="navbar" style="align-items: center">
+                <li><a href="{% url 'home' %}" class="button">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'risk_list' %}" class="button">Risks</a></li>
+                    <li><a href="{% url 'add_risk' %}" class="button">Add Risk</a></li>
+                    <li><a href="{% url 'control_list' %}" class="button">Controls</a></li>
+                    <li><a href="{% url 'add_control' %}" class="button">Add Control</a></li>
+                    <li><a href="{% url 'risk_register' %}" class="button">Risk Register</a></li>
+                    <li><a href="{% url 'assigned_items' %}" class="button">{{ user.username }}</a></li>
+                    <li><a href="{% url 'logout' %}" class="button">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}" class="button">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="button">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

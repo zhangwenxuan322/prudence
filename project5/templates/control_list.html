@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Control List{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Control List</h1>
+    {% if messages %}
+    <div id="message-box">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Effectiveness</th>
+                <th>Owner</th>
+                <th>Last Assessed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for control in controls %}
+            <tr onclick="window.location='{% url 'edit_control' control.id %}';" style="cursor: pointer;">
+                <td>{{ control.name }}</td>
+                <td>{{ control.description }}</td>
+                <td style="text-align: center; vertical-align: middle; color: 
+                    {% if control.effectiveness == 0.0 %}#ff6347
+                    {% elif control.effectiveness == 0.5 %}#ffdf47
+                    {% elif control.effectiveness == 1.0 %}#90ee90
+                    {% else %}#000000 {% endif %};">
+                    {% if control.effectiveness == 0.0 %}Not Effective
+                    {% elif control.effectiveness == 0.5 %}Partially Effective
+                    {% elif control.effectiveness == 1.0 %}Fully Effective
+                    {% else %}Unknown Effectiveness{% endif %}
+                </td>
+                <td>
+                    {% if control.owner %}
+                    {{ control.owner.username }}
+                    {% else %}
+                    No owner
+                    {% endif %}
+                </td>
+                <td>{{ control.clastassessed|date:"Y-m-d" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No controls found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const effectivenessElements = document.querySelectorAll('.effectiveness');
+        effectivenessElements.forEach(element => {
+            const value = parseFloat(element.getAttribute('data-value'));
+            let description = 'Unknown';  // Default description
+            if (value === 0.0) {
+                description = 'Not Effective';
+            } else if (value === 0.5) {
+                description = 'Partially Effective';
+            } else if (value === 1.0) {
+                description = 'Fully Effective';
+            }
+            element.textContent = description;  // Update the text content of the element
+        });
+    });
+</script>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var msgBox = document.getElementById('message-box');
+        if (msgBox) {
+            msgBox.style.display = 'block'; // Initially display the message
+            setTimeout(function() {
+                var fadeEffect = setInterval(function() {
+                    if (msgBox.style.opacity > 0) {
+                        msgBox.style.opacity -= 0.05; // Reduce opacity gradually
+                    } else {
+                        clearInterval(fadeEffect);
+                        msgBox.style.display = 'none'; // Hide after fading out
+                    }
+                }, 150); // The speed of the fade-out effect
+            }, 3000); // How long to display the message before starting to fade out
+        }
+    });
+</script>
+{% endblock %}
+
+<style>
+    #message-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        border-radius: 5px;
+        z-index: 10;
+        opacity: 0.75;
+    }
+</style>

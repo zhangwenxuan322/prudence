@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% load risk_filters %}  <!-- Load the custom template filters -->
+
+{% block title %}Risk List{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Risk List</h1>
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Inherent Probability</th>
+                <th>Inherent Impact</th>
+                <th>Inherent Risk Rating</th>
+                <th>Control(s)</th>
+                <th>Control Effectiveness</th>
+                <th>Control Owner(s)</th>
+                <th>Residual Impact</th>
+                <th>Residual Probability</th>
+                <th>Residual Risk Rating</th>
+                <th>Risk Owner(s)</th>
+                <th>Last Assessed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for risk in risks %}
+            <tr class="editable-row" data-id="{{ risk.id }}" style="cursor:pointer">
+                <td>{{ risk.description }}</td>
+                <td>{{ risk.inherent_probability|get_description:'prob' }}</td>
+                <td>{{ risk.inherent_impact|get_description:'impact' }}</td>
+                <td>{{ risk.inherent_risk_rating|get_risk_description }}</td>
+                <td>
+                    {% for control in risk.controls.all %}
+                        {{ control.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    {% for control in risk.controls.all %}
+                    <span style="color: 
+                        {% if control.effectiveness == 0.0 %}#ff6347
+                        {% elif control.effectiveness == 0.5 %}#ffdf47
+                        {% elif control.effectiveness == 1.0 %}#90ee90
+                        {% else %}#000000{% endif %};">
+                        {% if control.effectiveness == 0.0 %}
+                            Not Effective
+                        {% elif control.effectiveness == 0.5 %}
+                            Partially Effective
+                        {% elif control.effectiveness == 1.0 %}
+                            Fully Effective
+                        {% else %}
+                            Unknown Effectiveness
+                        {% endif %}
+                    </span><br>
+                    {% endfor %}
+                </td>
+                
+                <td>
+                    {% for control in risk.controls.all %}
+                        {% if control.owner %}
+                            {{ control.owner.username }}
+                        {% else %}
+                            No owner assigned
+                        {% endif %}
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ risk.residual_impact|get_description:'prob' }}</td>
+                <td>{{ risk.residual_probability|get_description:'impact' }}</td>
+                <td>{{ risk.residual_risk_rating|get_risk_description }}</td>
+                <td>
+                    {% if risk.risk_owner %}
+                        {{ risk.risk_owner.username }}
+                    {% else %}
+                        None assigned
+                    {% endif %}
+                </td>
+                <td>{{ risk.last_assessed|date:"Y-m-d" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11">No risks found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.editable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function() {
+                const riskId = this.dataset.id;
+                window.location.href = `{% url 'edit_risk' 999 %}`.replace('999', riskId);
+            });
+        });
+    });
+</script>
+
+{% endblock %}

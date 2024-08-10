@@ -1,0 +1,27 @@
+# Django framework
+Django==4.2.5
+
+# Database integration and ORM
+django-environ==0.9.0  # For environment variable management
+
+# Security and authentication
+django-extensions==3.2.1  # For additional Django commands
+
+# Frontend and template support
+django-widget-tweaks==1.4.12  # To tweak form widgets in templates
+
+# Visualization and data handling
+matplotlib==3.7.1  # Used for generating charts on the server-side
+numpy==1.24.3      # For numerical operations, required by matplotlib
+
+# Additional tools (optional)
+gunicorn==20.1.0  # For deploying Django applications
+
+# Testing and development
+pytest-django==4.5.2  # For testing Django applications
+
+# Security
+cryptography==41.0.3  # For enhanced security (future enhancement)
+
+# Compatibility
+pytz==2023.3  # Timezone support (future enhancement)

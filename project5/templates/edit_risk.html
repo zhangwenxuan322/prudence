@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Edit Risk</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="save-button">Save</button>
+    <button type="button" class="button delete-button" onclick="confirmDeletion({{ risk.id }})">Delete</button>
+</form>
+
+<script>
+    function confirmDeletion() {
+        if (confirm('Are you sure you want to delete this risk?')) {
+            var form = document.querySelector('form');
+            form.action = "{% url 'delete_risk' risk.id %}"; // URL to the delete endpoint
+            form.method = "POST";
+            form.submit();
+        }
+    }
+</script>
+
+{% endblock %}
+

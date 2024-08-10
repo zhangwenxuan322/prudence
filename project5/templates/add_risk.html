@@ -1,0 +1,15 @@
+<!-- templates/add_risk.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Risk{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Add Risk</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button">Add Risk</button>
+    </form>
+</div>
+{% endblock %}
