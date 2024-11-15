@@ -1,162 +1,166 @@
 {% extends 'base.html' %}
 
-{% block title %}Risk Register{% endblock %}
+{% block title %}
+  Risk Register
+{% endblock %}
 
 {% block content %}
-<div class="container">
+  <div class="container">
     <h1>Risk Register</h1>
 
     <!-- Canvas for interactive risk plotting -->
     <div class="text-center">
-        <canvas id="riskMatrixChart" style="margin-top: 10px;" width="400" height="200"></canvas>
+      <canvas id="riskMatrixChart" style="margin-top: 10px;" width="400" height="200"></canvas>
     </div>
 
     <!-- Include Chart.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('riskMatrixChart').getContext('2d');
-        const risksData = JSON.parse('{{ risks_json|escapejs }}');
-        const iso31000 = {
-            1: 'Very Low',
-            2: 'Low',
-            3: 'Medium',
-            4: 'High',
-            5: 'Very High'
-        };
-        
-        const colorMapping = {
-            'Very Low': '#58D68D',  // Light Green
-            'Low': '#52BE80',       // Green
-            'Medium': '#F7DC6F',    // Yellow
-            'High': '#F4D03F',      // Orange
-            'Very High': '#EC7063'  // Red
-        };
-        
-        const chartData = {
-            datasets: risksData.map(risk => ({
-                label: risk.description,
-                data: [{
-                    x: risk.inherent_probability - 0.5, // Adjusting the x coordinate to center the dot
-                    y: risk.inherent_impact - 0.5, // Adjusting the y coordinate to center the dot
-                    riskType: 'Inherent',
-                    riskLabel: iso31000[risk.inherent_impact]
-                }, {
-                    x: risk.residual_probability - 0.5, // Same adjustment for residual risks
-                    y: risk.residual_impact - 0.5,
-                    riskType: 'Residual',
-                    riskLabel: iso31000[risk.residual_impact]
-                }],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)', // Inherent risk color
-                    'rgba(54, 162, 235, 0.7)'  // Residual risk color
-                ],
-                showLine: true,
-                borderColor: 'rgba(75, 192, 192, 0.1)',
-                borderWidth: 1,
-                pointRadius: 5,
-                pointHoverRadius: 7,
-                pointStyle: ['circle', 'rect']
-            }))
-        };
-        
-        const chartOptions = {
-            scales: {
-                x: {
-                    type: 'linear',
-                    min: 0,
-                    max: 5,
-                    ticks: {
-                        stepSize: 1
-                    },
-                    title: {
-                        display: true,
-                        text: 'Probability (1-5 Scale)'
-                    }
-                },
-                y: {
-                    min: 0,
-                    max: 5,
-                    ticks: {
-                        stepSize: 1
-                    },
-                    title: {
-                        display: true,
-                        text: 'Impact (1-5 Scale)'
-                    }
-                }
+      const ctx = document.getElementById('riskMatrixChart').getContext('2d')
+      const risksData = JSON.parse('{{ risks_json|escapejs }}')
+      const iso31000 = {
+        1: 'Very Low',
+        2: 'Low',
+        3: 'Medium',
+        4: 'High',
+        5: 'Very High'
+      }
+      
+      const colorMapping = {
+        'Very Low': '#58D68D', // Light Green
+        Low: '#52BE80', // Green
+        Medium: '#F7DC6F', // Yellow
+        High: '#F4D03F', // Orange
+        'Very High': '#EC7063' // Red
+      }
+      
+      const chartData = {
+        datasets: risksData.map((risk) => ({
+          label: risk.description,
+          data: [
+            {
+              x: risk.inherent_probability - 0.5, // Adjusting the x coordinate to center the dot
+              y: risk.inherent_impact - 0.5, // Adjusting the y coordinate to center the dot
+              riskType: 'Inherent',
+              riskLabel: iso31000[risk.inherent_impact]
             },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const risk = context.raw;
-                            const controls = risk.controls && risk.controls.length > 0 ? risk.controls.map(control => control.name).join('; ') : 'None';
-                            return `${context.dataset.label}, ${risk.riskType} Risk (${risk.riskLabel}), Controls: ${controls}`;
-                        }
-                    }
-                },
-                beforeDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    const xAxis = chart.scales.x;
-                    const yAxis = chart.scales.y;
-                    const cellWidth = (xAxis.width / 5);
-                    const cellHeight = (yAxis.height / 5);
-        
-                    for (let i = 0; i < 5; i++) {
-                        for (let j = 0; j < 5; j++) {
-                            ctx.fillStyle = colorMapping[iso31000[5 - j]]; // Reverse the j index for correct color assignment
-                            ctx.fillRect(
-                                xAxis.left + i * cellWidth,
-                                yAxis.top + j * cellHeight,
-                                cellWidth,
-                                cellHeight
-                            );
-                        }
-                    }
-                }
+            {
+              x: risk.residual_probability - 0.5, // Same adjustment for residual risks
+              y: risk.residual_impact - 0.5,
+              riskType: 'Residual',
+              riskLabel: iso31000[risk.residual_impact]
             }
-        };
-        
-        new Chart(ctx, {
-            type: 'scatter',
-            data: chartData,
-            options: chartOptions
-        });
-        </script>
-</div>
+          ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.7)', // Inherent risk color
+            'rgba(54, 162, 235, 0.7)' // Residual risk color
+          ],
+          showLine: true,
+          borderColor: 'rgba(75, 192, 192, 0.1)',
+          borderWidth: 1,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointStyle: ['circle', 'rect']
+        }))
+      }
+      
+      const chartOptions = {
+        scales: {
+          x: {
+            type: 'linear',
+            min: 0,
+            max: 5,
+            ticks: {
+              stepSize: 1
+            },
+            title: {
+              display: true,
+              text: 'Probability (1-5 Scale)'
+            }
+          },
+          y: {
+            min: 0,
+            max: 5,
+            ticks: {
+              stepSize: 1
+            },
+            title: {
+              display: true,
+              text: 'Impact (1-5 Scale)'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const risk = context.raw
+                const controls = risk.controls && risk.controls.length > 0 ? risk.controls.map((control) => control.name).join('; ') : 'None'
+                return `${context.dataset.label}, ${risk.riskType} Risk (${risk.riskLabel}), Controls: ${controls}`
+              }
+            }
+          },
+          beforeDraw: function (chart) {
+            const ctx = chart.ctx
+            const xAxis = chart.scales.x
+            const yAxis = chart.scales.y
+            const cellWidth = xAxis.width / 5
+            const cellHeight = yAxis.height / 5
+      
+            for (let i = 0; i < 5; i++) {
+              for (let j = 0; j < 5; j++) {
+                ctx.fillStyle = colorMapping[iso31000[5 - j]] // Reverse the j index for correct color assignment
+                ctx.fillRect(xAxis.left + i * cellWidth, yAxis.top + j * cellHeight, cellWidth, cellHeight)
+              }
+            }
+          }
+        }
+      }
+      
+      new Chart(ctx, {
+        type: 'scatter',
+        data: chartData,
+        options: chartOptions
+      })
+    </script>
+  </div>
 
-    <!-- Risk Scale Table with Color Coding -->
-    <div class="text-center mt-4">
-        <table border="0" align="center" style="margin: 0 auto; width: 50%; border-collapse: collapse;">
-            <thead>
-                <tr style="background-color: #333; color: #fff; text-align: center;">
-                    <th style="padding: 10px;">Risk Level</th>
-                    <th style="padding: 10px;">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="background-color: #00ff00; color: #000; text-align: center; vertical-align: middle;"> <!-- Very Low -->
-                    <td style="padding: 10px;">1</td>
-                    <td style="padding: 10px;">Very Low</td>
-                </tr>
-                <tr style="background-color: #ccff00; color: #000; text-align: center; vertical-align: middle;"> <!-- Low -->
-                    <td style="padding: 10px;">2</td>
-                    <td style="padding: 10px;">Low</td>
-                </tr>
-                <tr style="background-color: #ffff00; color: #000; text-align: center; vertical-align: middle;"> <!-- Medium -->
-                    <td style="padding: 10px;">3</td>
-                    <td style="padding: 10px;">Medium</td>
-                </tr>
-                <tr style="background-color: #ff9900; color: #000; text-align: center; vertical-align: middle;"> <!-- High -->
-                    <td style="padding: 10px;">4</td>
-                    <td style="padding: 10px;">High</td>
-                </tr>
-                <tr style="background-color: #ff0000; color: #fff; text-align: center; vertical-align: middle;"> <!-- Very High -->
-                    <td style="padding: 10px;">5</td>
-                    <td style="padding: 10px;">Very High</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
+  <!-- Risk Scale Table with Color Coding -->
+  <div class="text-center mt-4">
+    <table border="0" align="center" style="margin: 0 auto; width: 50%; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #333; color: #fff; text-align: center;">
+          <th style="padding: 10px;">Risk Level</th>
+          <th style="padding: 10px;">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background-color: #00ff00; color: #000; text-align: center; vertical-align: middle;">
+          <!-- Very Low -->
+          <td style="padding: 10px;">1</td>
+          <td style="padding: 10px;">Very Low</td>
+        </tr>
+        <tr style="background-color: #ccff00; color: #000; text-align: center; vertical-align: middle;">
+          <!-- Low -->
+          <td style="padding: 10px;">2</td>
+          <td style="padding: 10px;">Low</td>
+        </tr>
+        <tr style="background-color: #ffff00; color: #000; text-align: center; vertical-align: middle;">
+          <!-- Medium -->
+          <td style="padding: 10px;">3</td>
+          <td style="padding: 10px;">Medium</td>
+        </tr>
+        <tr style="background-color: #ff9900; color: #000; text-align: center; vertical-align: middle;">
+          <!-- High -->
+          <td style="padding: 10px;">4</td>
+          <td style="padding: 10px;">High</td>
+        </tr>
+        <tr style="background-color: #ff0000; color: #fff; text-align: center; vertical-align: middle;">
+          <!-- Very High -->
+          <td style="padding: 10px;">5</td>
+          <td style="padding: 10px;">Very High</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

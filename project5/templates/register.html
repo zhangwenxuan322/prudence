@@ -7,7 +7,7 @@
     <h2>Create Your Account</h2>
     <form method="post" class="register-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.as_table }}
         <button type="submit" class="btn-register">Register</button>
     </form>
 </div>

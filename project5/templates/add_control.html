@@ -7,8 +7,9 @@
     <h1 class="text-center mb-4">Add a New Control</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="button">Save Control</button>
+        {{ form.as_table }}
+
+        <button type="submit" class="button" style="margin-top: 1rem;">Save Control</button>
     </form>
 </div>
 {% endblock %}
