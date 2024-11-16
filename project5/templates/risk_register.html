@@ -5,12 +5,13 @@
 {% endblock %}
 
 {% block content %}
+  <div></div>
   <div class="container">
     <h1>Risk Register</h1>
 
     <!-- Canvas for interactive risk plotting -->
     <div class="text-center">
-      <canvas id="riskMatrixChart" style="margin-top: 10px;" width="400" height="200"></canvas>
+      <canvas id="riskMatrixChart" style="margin-top: 10px;" width="800" height="600"></canvas>
     </div>
 
     <!-- Include Chart.js from CDN -->
@@ -34,8 +35,8 @@
         'Very High': '#EC7063' // Red
       }
       
-      const chartData = {
-        datasets: risksData.map((risk) => ({
+      /* const chartData = {
+        {% comment %} datasets: risksData.map((risk) => ({
           label: risk.description,
           data: [
             {
@@ -61,8 +62,8 @@
           pointRadius: 5,
           pointHoverRadius: 7,
           pointStyle: ['circle', 'rect']
-        }))
-      }
+        })) {% endcomment %}
+      } */
       
       const chartOptions = {
         scales: {
@@ -75,7 +76,7 @@
             },
             title: {
               display: true,
-              text: 'Probability (1-5 Scale)'
+              text: 'Impact (1-5 Scale)'
             }
           },
           y: {
@@ -86,7 +87,7 @@
             },
             title: {
               display: true,
-              text: 'Impact (1-5 Scale)'
+              text: 'Probability (1-5 Scale)'
             }
           }
         },
@@ -116,17 +117,72 @@
           }
         }
       }
+
+      function fillColor(x, y, xLocation, yLocation, margin) {
+        ctx.fillRect(x.getPixelForValue(xLocation) + margin,
+                     y.getPixelForValue(yLocation) - margin,
+                     x.getPixelForValue(xLocation+1) - x.getPixelForValue(xLocation) - margin * 2,
+                     y.getPixelForValue(yLocation+1) - y.getPixelForValue(yLocation) + margin * 2);
+        
+      }
+
+      const backgroundChartArea = {
+        id: 'backgroundChartArea',
+        beforeDatasetsDraw(chart, args, options) {
+          const {ctx, chartArea: { top, bottom, left, right, width, height}, scales: {x, y}} = chart;
+          // set margin annd opacity
+          const margin = 2;
+          const opacity = 0.7;
+          // fill the background
+          // fill the high risk area
+          ctx.fillStyle = `rgba(255, 0, 11, ${opacity})`;
+          fillColor(x, y, 3, 4, margin);
+          fillColor(x, y, 4, 4, margin);
+          fillColor(x, y, 4, 3, margin);
+          // fill the medium-high risk area
+          ctx.fillStyle = `rgba(255, 183, 35, ${opacity})`;
+          fillColor(x, y, 2, 4, margin);
+          fillColor(x, y, 3, 3, margin);
+          fillColor(x, y, 3, 2, margin);
+          fillColor(x, y, 4, 2, margin);
+          fillColor(x, y, 4, 1, margin);
+          // fill the medium risk area
+          ctx.fillStyle = `rgba(254, 253, 47, ${opacity})`;
+          fillColor(x, y, 1, 4, margin);
+          fillColor(x, y, 2, 3, margin);
+          fillColor(x, y, 2, 2, margin);
+          fillColor(x, y, 3, 1, margin);
+          fillColor(x, y, 3, 0, margin);
+          fillColor(x, y, 4, 0, margin);
+          // fill the low-medium risk area
+          ctx.fillStyle = `rgba(136, 202, 77, ${opacity})`;
+          fillColor(x, y, 0, 4, margin);
+          fillColor(x, y, 1, 3, margin);
+          fillColor(x, y, 1, 2, margin);
+          fillColor(x, y, 1, 1, margin);
+          fillColor(x, y, 2, 1, margin);
+          fillColor(x, y, 2, 0, margin);
+          // fill the low risk area
+          ctx.fillStyle = `rgba(0, 167, 74, ${opacity})`;
+          fillColor(x, y, 0, 3, margin);
+          fillColor(x, y, 0, 2, margin);
+          fillColor(x, y, 0, 1, margin);
+          fillColor(x, y, 0, 0, margin);
+          fillColor(x, y, 1, 0, margin);
+        }
+      }
       
       new Chart(ctx, {
         type: 'scatter',
         data: chartData,
-        options: chartOptions
+        options: chartOptions,
+        plugins: [backgroundChartArea]
       })
     </script>
   </div>
 
   <!-- Risk Scale Table with Color Coding -->
-  <div class="text-center mt-4">
+  {% comment %} <div class="text-center mt-4">
     <table border="0" align="center" style="margin: 0 auto; width: 50%; border-collapse: collapse;">
       <thead>
         <tr style="background-color: #333; color: #fff; text-align: center;">
@@ -162,5 +218,5 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </div> {% endcomment %}
 {% endblock %}
