@@ -14,7 +14,9 @@ from django.contrib import messages
 from .forms import RiskForm, ControlForm
 from .models import Risk, Control, Action
 from datetime import timedelta
+import logging
 
+logger = logging.getLogger("prudence")
 def add_risk(request):
     if request.method == 'POST':
         form = RiskForm(request.POST)
@@ -100,24 +102,6 @@ def edit_control(request, control_id):
     
     return render(request, 'edit_control.html', {'form': form, 'control': control})
 
-def risk_register(request):
-    risks = Risk.objects.prefetch_related('controls').all()
-    risks_data = [
-        {
-            'description': risk.description,
-            'inherent_probability': risk.inherent_probability,
-            'inherent_impact': risk.inherent_impact,
-            'residual_probability': risk.residual_probability,
-            'residual_impact': risk.residual_impact,
-            'controls': [control.name for control in risk.controls.all()],
-        }
-        for risk in risks
-    ]
-    context = {
-        'risks_json': json.dumps(risks_data)
-    }
-    return render(request, 'risk_register.html', context)
-
 def delete_control(request, control_id):
     control = get_object_or_404(Control, id=control_id)
     if request.method == 'POST':
@@ -176,8 +160,10 @@ def risk_register(request):
         for risk in risks
     ]
     context = {
-        'risks_json': json.dumps(risks_data)  # This is the JSON data for the frontend
+        'risks': risks_data
     }
+    logger.info(f'Risk register accessed by {request.user.username}')
+    logger.info(f'Risk data: {risks_data}')
     return render(request, 'risk_register.html', context)
 
 def risk_matrix(request):

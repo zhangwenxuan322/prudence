@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block content %}
-  <div></div>
   <div class="container">
     <h1>Risk Register</h1>
 
@@ -18,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const ctx = document.getElementById('riskMatrixChart').getContext('2d')
-      const risksData = JSON.parse('{{ risks_json|escapejs }}')
+      const risksData = {{ risks|safe }}
       const iso31000 = {
         1: 'Very Low',
         2: 'Low',
@@ -35,8 +34,8 @@
         'Very High': '#EC7063' // Red
       }
       
-      /* const chartData = {
-        {% comment %} datasets: risksData.map((risk) => ({
+      const chartData = {
+        datasets: risksData.map((risk) => ({
           label: risk.description,
           data: [
             {
@@ -53,17 +52,18 @@
             }
           ],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.7)', // Inherent risk color
-            'rgba(54, 162, 235, 0.7)' // Residual risk color
+            // 'rgba(255, 99, 132, 0.7)', // Inherent risk color
+            // 'rgba(54, 162, 235, 0.7)' // Residual risk color
+            'rgba(29, 29, 29, 1)'
           ],
-          showLine: true,
+          showLine: false,
           borderColor: 'rgba(75, 192, 192, 0.1)',
           borderWidth: 1,
           pointRadius: 5,
           pointHoverRadius: 7,
           pointStyle: ['circle', 'rect']
-        })) {% endcomment %}
-      } */
+        }))
+      }
       
       const chartOptions = {
         scales: {
@@ -117,58 +117,58 @@
           }
         }
       }
-
+      
       function fillColor(x, y, xLocation, yLocation, margin) {
-        ctx.fillRect(x.getPixelForValue(xLocation) + margin,
-                     y.getPixelForValue(yLocation) - margin,
-                     x.getPixelForValue(xLocation+1) - x.getPixelForValue(xLocation) - margin * 2,
-                     y.getPixelForValue(yLocation+1) - y.getPixelForValue(yLocation) + margin * 2);
-        
+        ctx.fillRect(x.getPixelForValue(xLocation) + margin, y.getPixelForValue(yLocation) - margin, x.getPixelForValue(xLocation + 1) - x.getPixelForValue(xLocation) - margin * 2, y.getPixelForValue(yLocation + 1) - y.getPixelForValue(yLocation) + margin * 2)
       }
-
+      
       const backgroundChartArea = {
         id: 'backgroundChartArea',
         beforeDatasetsDraw(chart, args, options) {
-          const {ctx, chartArea: { top, bottom, left, right, width, height}, scales: {x, y}} = chart;
+          const {
+            ctx,
+            chartArea: { top, bottom, left, right, width, height },
+            scales: { x, y }
+          } = chart
           // set margin annd opacity
-          const margin = 2;
-          const opacity = 0.7;
+          const margin = 2
+          const opacity = 0.7
           // fill the background
           // fill the high risk area
-          ctx.fillStyle = `rgba(255, 0, 11, ${opacity})`;
-          fillColor(x, y, 3, 4, margin);
-          fillColor(x, y, 4, 4, margin);
-          fillColor(x, y, 4, 3, margin);
+          ctx.fillStyle = `rgba(255, 0, 11, ${opacity})`
+          fillColor(x, y, 3, 4, margin)
+          fillColor(x, y, 4, 4, margin)
+          fillColor(x, y, 4, 3, margin)
           // fill the medium-high risk area
-          ctx.fillStyle = `rgba(255, 183, 35, ${opacity})`;
-          fillColor(x, y, 2, 4, margin);
-          fillColor(x, y, 3, 3, margin);
-          fillColor(x, y, 3, 2, margin);
-          fillColor(x, y, 4, 2, margin);
-          fillColor(x, y, 4, 1, margin);
+          ctx.fillStyle = `rgba(255, 183, 35, ${opacity})`
+          fillColor(x, y, 2, 4, margin)
+          fillColor(x, y, 3, 3, margin)
+          fillColor(x, y, 3, 2, margin)
+          fillColor(x, y, 4, 2, margin)
+          fillColor(x, y, 4, 1, margin)
           // fill the medium risk area
-          ctx.fillStyle = `rgba(254, 253, 47, ${opacity})`;
-          fillColor(x, y, 1, 4, margin);
-          fillColor(x, y, 2, 3, margin);
-          fillColor(x, y, 2, 2, margin);
-          fillColor(x, y, 3, 1, margin);
-          fillColor(x, y, 3, 0, margin);
-          fillColor(x, y, 4, 0, margin);
+          ctx.fillStyle = `rgba(254, 253, 47, ${opacity})`
+          fillColor(x, y, 1, 4, margin)
+          fillColor(x, y, 2, 3, margin)
+          fillColor(x, y, 2, 2, margin)
+          fillColor(x, y, 3, 1, margin)
+          fillColor(x, y, 3, 0, margin)
+          fillColor(x, y, 4, 0, margin)
           // fill the low-medium risk area
-          ctx.fillStyle = `rgba(136, 202, 77, ${opacity})`;
-          fillColor(x, y, 0, 4, margin);
-          fillColor(x, y, 1, 3, margin);
-          fillColor(x, y, 1, 2, margin);
-          fillColor(x, y, 1, 1, margin);
-          fillColor(x, y, 2, 1, margin);
-          fillColor(x, y, 2, 0, margin);
+          ctx.fillStyle = `rgba(136, 202, 77, ${opacity})`
+          fillColor(x, y, 0, 4, margin)
+          fillColor(x, y, 1, 3, margin)
+          fillColor(x, y, 1, 2, margin)
+          fillColor(x, y, 1, 1, margin)
+          fillColor(x, y, 2, 1, margin)
+          fillColor(x, y, 2, 0, margin)
           // fill the low risk area
-          ctx.fillStyle = `rgba(0, 167, 74, ${opacity})`;
-          fillColor(x, y, 0, 3, margin);
-          fillColor(x, y, 0, 2, margin);
-          fillColor(x, y, 0, 1, margin);
-          fillColor(x, y, 0, 0, margin);
-          fillColor(x, y, 1, 0, margin);
+          ctx.fillStyle = `rgba(0, 167, 74, ${opacity})`
+          fillColor(x, y, 0, 3, margin)
+          fillColor(x, y, 0, 2, margin)
+          fillColor(x, y, 0, 1, margin)
+          fillColor(x, y, 0, 0, margin)
+          fillColor(x, y, 1, 0, margin)
         }
       }
       
@@ -179,6 +179,16 @@
         plugins: [backgroundChartArea]
       })
     </script>
+  </div>
+
+  <div class="riskCheckBoxes">
+    {% for risk in risks %}
+      {{ risk }}
+    {% endfor %}
+    <input type="checkbox" value="0" name="risk0" id="risk0" checked />
+    <label for="risk0">Risk0</label>
+    <input type="checkbox" value="1" name="risk1" id="risk1" checked />
+    <label for="risk1">Risk1</label>
   </div>
 
   <!-- Risk Scale Table with Color Coding -->
