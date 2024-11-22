@@ -150,6 +150,7 @@ def risk_register(request):
     risks = Risk.objects.prefetch_related('controls').all()
     risks_data = [
         {
+            'id': risk.id,
             'description': risk.description,
             'inherent_probability': risk.inherent_probability,
             'inherent_impact': risk.inherent_impact,

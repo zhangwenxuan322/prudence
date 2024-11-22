@@ -172,23 +172,29 @@
         }
       }
       
-      new Chart(ctx, {
+      const riskChart = new Chart(ctx, {
         type: 'scatter',
         data: chartData,
         options: chartOptions,
         plugins: [backgroundChartArea]
       })
+
+      function updateChart(element) {
+        const isRiskShown = riskChart.isDatasetVisible(element.value)
+        if (isRiskShown === false) {
+          riskChart.show(element.value)
+        } else {
+          riskChart.hide(element.value)
+        }
+      }
     </script>
   </div>
 
   <div class="riskCheckBoxes">
     {% for risk in risks %}
-      {{ risk }}
+      <input type="checkbox" onclick="updateChart(this)" value="{{ forloop.counter0 }}" name="risk{{ risk.id }}" id="risk{{ risk.id }}" checked />
+      <label for="risk{{ risk.id }}">{{ risk.description }}</label>
     {% endfor %}
-    <input type="checkbox" value="0" name="risk0" id="risk0" checked />
-    <label for="risk0">Risk0</label>
-    <input type="checkbox" value="1" name="risk1" id="risk1" checked />
-    <label for="risk1">Risk1</label>
   </div>
 
   <!-- Risk Scale Table with Color Coding -->
