@@ -52,9 +52,9 @@
             }
           ],
           backgroundColor: [
-            // 'rgba(255, 99, 132, 0.7)', // Inherent risk color
-            // 'rgba(54, 162, 235, 0.7)' // Residual risk color
-            'rgba(29, 29, 29, 1)'
+            'rgba(43, 43, 43, 0.7)', // Inherent risk color
+            'rgba(244, 244, 244, 0.7)', // Residual risk color
+            // 'rgba(29, 29, 29, 1)'
           ],
           showLine: false,
           borderColor: 'rgba(75, 192, 192, 0.1)',
@@ -114,8 +114,11 @@
                 ctx.fillRect(xAxis.left + i * cellWidth, yAxis.top + j * cellHeight, cellWidth, cellHeight)
               }
             }
+          },
+          legend: {
+            display: false
           }
-        }
+        },
       }
       
       function fillColor(x, y, xLocation, yLocation, margin) {
