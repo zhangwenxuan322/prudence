@@ -1,21 +1,21 @@
 databases:
-  - name: prudencedb
+  - name: mysitedb
     plan: free
-    databaseName: zwx
-    user: postgres
+    databaseName: mysite
+    user: mysite
 
 services:
   - type: web
     plan: free
-    name: prudence
+    name: mysite
     runtime: python
     buildCommand: "./build.sh"
     startCommand: "python -m gunicorn prudence.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: prudencedb
-          property: "postgresql://postgres:postgres@localhost:5432/zwx"
+          name: mysitedb
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
