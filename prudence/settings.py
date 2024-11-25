@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-j4_f%77g&*!&5aay6ev=do%$%k$a9b2_cm4=t8089to3z1=img"
 DEBUG = False
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mysite-bk4p.onrender.com']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
