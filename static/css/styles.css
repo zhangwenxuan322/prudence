@@ -28,6 +28,10 @@ canvas {
     margin: 20px auto;
 }
 
+.role-warning {
+    color: #cc0000;
+}
+
 h1 {
     font-size: 24px;
     color: #333;

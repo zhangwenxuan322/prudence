@@ -1,15 +1,24 @@
 <!-- templates/add_risk.html -->
 {% extends 'base.html' %}
 
-{% block title %}Add Risk{% endblock %}
+{% block title %}
+  Add Risk
+{% endblock %}
 
 {% block content %}
-<div class="container">
+  <div class="container">
     <h1>Add Risk</h1>
+    {% if user.role == 'L1' %}
+      <h2 class="role-warning">You need an L2 user to approve your risk add operation.</h2>
+    {% endif %}
     <form method="post">
-        {% csrf_token %}
+      {% csrf_token %}
+      {% if user.role != 'L3' %}
         {{ form.as_table }}
         <button type="submit" class="button">Add Risk</button>
+      {% else %}
+        <h2 class="role-warning">You are not allowed to add risks.</h2>
+      {% endif %}
     </form>
-</div>
+  </div>
 {% endblock %}
