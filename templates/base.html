@@ -24,15 +24,19 @@
             <li>
               <a href="{% url 'risk_list' %}" class="button">Risks</a>
             </li>
-            <li>
-              <a href="{% url 'add_risk' %}" class="button">Add Risk</a>
-            </li>
+            {% if user.role != 'L3' %}
+              <li>
+                <a href="{% url 'add_risk' %}" class="button">Add Risk</a>
+              </li>
+            {% endif %}
             <li>
               <a href="{% url 'control_list' %}" class="button">Controls</a>
             </li>
-            <li>
-              <a href="{% url 'add_control' %}" class="button">Add Control</a>
-            </li>
+            {% if user.role != 'L3' %}
+              <li>
+                <a href="{% url 'add_control' %}" class="button">Add Control</a>
+              </li>
+            {% endif %}
             <li>
               <a href="{% url 'risk_register' %}" class="button">Risk Register</a>
             </li>
