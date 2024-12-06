@@ -1,57 +1,89 @@
 <!-- templates/assigned_items.html -->
 {% extends 'base.html' %}
 
-{% block title %}Assigned Items{% endblock %}
+{% block title %}
+  Assigned Items
+{% endblock %}
 
 {% block content %}
-<div class="container">
+  <div class="container">
     <h1>Assigned Items</h1>
 
     <!-- Risks Assigned to Me -->
     <section>
-        <h2>Risks Assigned to Me</h2>
-        <table class="risk-table">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for risk in risks %}
-                <tr onclick="window.location='{% url 'edit_risk' risk.id %}';" style="cursor: pointer;">
-                    <td>{{ risk.description }}</td>
-                    <td>Edit</td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="2">No risks assigned.</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <h2>Risks Assigned to Me</h2>
+      <table class="risk-table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for risk in risks %}
+            <tr onclick="window.location='{% url 'edit_risk' risk.id %}';" style="cursor: pointer;">
+              <td>{{ risk.description }}</td>
+              <td>Edit</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="2">No risks assigned.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </section>
 
     <!-- Controls Assigned to Me -->
     <section>
-        <h2>Controls Assigned to Me</h2>
-        <table class="risk-table">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for control in controls %}
-                <tr onclick="window.location='{% url 'edit_control' control.id %}';" style="cursor: pointer;">
-                    <td>{{ control.description }}</td>
-                    <td>Edit</td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="2">No controls assigned.</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <h2>Controls Assigned to Me</h2>
+      <table class="risk-table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for control in controls %}
+            <tr onclick="window.location='{% url 'edit_control' control.id %}';" style="cursor: pointer;">
+              <td>{{ control.description }}</td>
+              <td>Edit</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="2">No controls assigned.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </section>
 
-</div>
+    <!-- Assessments Assigned to Me -->
+    {% if user.role == 'L2' %}
+      <section>
+        <h2>Assessments Assigned to Me</h2>
+        <table class="risk-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for assessment in assessments %}
+              <tr onclick="window.location='{% url 'assess_risk' assessment.id %}';" style="cursor: pointer;">
+                <td>{{ assessment.risk.description }}</td>
+                <td>Edit</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="2">No assessments assigned.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    {% endif %}
+  </div>
 {% endblock %}

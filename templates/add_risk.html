@@ -14,7 +14,41 @@
     <form method="post">
       {% csrf_token %}
       {% if user.role != 'L3' %}
-        {{ form.as_table }}
+        <div>
+            <label for="description">Description:</label>
+            <br>
+            {{ form.description }}
+        </div>
+        <div>
+            <label for="inherent-probability">Inherent Probability:</label>
+            {{ form.inherent_probability }}
+        </div>
+        <div>
+            <label for="inherent-impact">Inherent Impact:</label>
+            {{ form.inherent_impact }}
+        </div>
+        <div>
+            <label for="controls">Controls:</label>
+            {{ form.controls }}
+        </div>
+        <div>
+            <label for="residual-probability">Residual Proabability:</label>
+            {{ form.residual_probability }}
+        </div>
+        <div>
+            <label for="residual-impact">Residual Impact</label>
+            {{ form.residual_impact }}
+        </div>
+        <div>
+            <label for="risk-owner">Risk Owner:</label>
+            {{ form.risk_owner }}
+        </div>
+        {% if user.role == 'L1' %}
+            <div>
+                <label for="assigned-to">Assessor:</label>
+                {{ form.assessor }}
+            </div>
+        {% endif %}
         <button type="submit" class="button">Add Risk</button>
       {% else %}
         <h2 class="role-warning">You are not allowed to add risks.</h2>

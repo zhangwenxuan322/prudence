@@ -11,8 +11,8 @@ from matplotlib.colors import LinearSegmentedColormap
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import RiskForm, ControlForm
-from .models import Risk, Control, Action
+from .forms import RiskForm, ControlForm, RiskAssessmentForm
+from .models import Risk, Control, Action, RiskAssessment
 from datetime import timedelta
 import logging
 
@@ -22,6 +22,14 @@ def add_risk(request):
         form = RiskForm(request.POST)
         if form.is_valid():
             form.save()
+            # Check if an assessor was assigned
+            if form.cleaned_data['assessor'] != None:
+                # create a new risk assessment object
+                risk_assessment = RiskAssessment()
+                risk_assessment.assessor = form.cleaned_data['assessor']
+                risk_assessment.risk = form.instance
+                risk_assessment.assessment_status = 'P'
+                risk_assessment.save()
             messages.success(request, 'Risk added successfully.')
             return redirect('risk_list')  # Redirect to the risk list after adding
     else:
@@ -102,6 +110,18 @@ def edit_control(request, control_id):
     
     return render(request, 'edit_control.html', {'form': form, 'control': control})
 
+def assess_risk(request, assessment_id):
+    risk_assessment = get_object_or_404(RiskAssessment, id=assessment_id)
+    if request.method == 'POST':
+        form = RiskAssessmentForm(request.POST, instance=risk_assessment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Risk assessment updated successfully.')
+        return redirect('risk_list')
+    else:
+        form = RiskAssessmentForm(instance=risk_assessment)
+    return render(request, 'assess_risk.html', {'form': form, 'risk_assessment': risk_assessment})
+
 def delete_control(request, control_id):
     control = get_object_or_404(Control, id=control_id)
     if request.method == 'POST':
@@ -122,10 +142,12 @@ def assigned_items(request):
     assigned_risks = Risk.objects.filter(risk_owner=request.user)
     assigned_controls = Control.objects.filter(owner=request.user)
     assigned_actions = Action.objects.filter(owner=request.user)
+    assigned_assessment = RiskAssessment.objects.filter(assessor=request.user)
     context = {
         'risks': assigned_risks,
         'controls': assigned_controls,
-        'actions': assigned_actions
+        'actions': assigned_actions,
+        'assessments': assigned_assessment
     }
     return render(request, 'assigned_items.html', context)
 

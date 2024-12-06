@@ -74,6 +74,8 @@ class Risk(models.Model):
     risk_owner = models.ForeignKey(
         User, related_name='risks_owned', on_delete=models.SET_NULL, null=True)
     last_assessed = models.DateField(auto_now=True)
+    assessor = models.ForeignKey(
+        User, related_name='risks_assigned', on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'L2'})
 
     def save(self, *args, **kwargs):
         # Calculate the inherent risk rating if not already set
@@ -92,3 +94,20 @@ class Risk(models.Model):
 
     def __str__(self):
         return f"{self.description} - {self.risk_owner.username if self.risk_owner else 'No owner'}"
+
+
+class RiskAssessment(models.Model):
+    ASSESSMENT_STATUS_CHOICES = [
+        ('P', 'Pending'),
+        ('A', 'Accepted'),
+        ('R', 'Rejected'),
+    ]
+    risk = models.ForeignKey(Risk, on_delete=models.CASCADE)
+    assessor = models.ForeignKey(User, on_delete=models.CASCADE)
+    assessment_date = models.DateField(auto_now=True)
+    assessment_status = models.CharField(
+        max_length=1, choices=ASSESSMENT_STATUS_CHOICES)
+    assessor_comments = models.TextField()
+
+    def __str__(self):
+        return f"{self.risk.description} - {self.assessment_status}"

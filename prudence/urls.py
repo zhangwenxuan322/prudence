@@ -15,6 +15,7 @@ urlpatterns = [
     path('controls/', views.control_list, name='control_list'),
     path('edit-risk/<int:risk_id>/', views.edit_risk, name='edit_risk'),
     path('delete-risk/<int:risk_id>/', views.delete_risk, name='delete_risk'),
+    path('assess-risk/<int:assessment_id>/', views.assess_risk, name='assess_risk'),
     path('edit-control/<int:control_id>/', views.edit_control, name='edit_control'),
     path('delete-control/<int:control_id>/', views.delete_control, name='delete_control'),
     path('assigned-items/', views.assigned_items, name='assigned_items'),
