@@ -10,4 +10,4 @@ class CustomUser(AbstractUser):
         (L2, 'L2'),
         (L3, 'L3'),
     ]
-    role = models.CharField(choices=ROLE_CHOICES, default=L1)
+    role = models.CharField(max_length=2, choices=ROLE_CHOICES, default=L1)
