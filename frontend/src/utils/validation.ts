@@ -75,19 +75,19 @@ export const riskSchema = yup.object({
     .min(1, 'Impact must be between 1 and 5')
     .max(5, 'Impact must be between 1 and 5')
     .integer('Impact must be a whole number'),
-  owner: yup
+  owner_id: yup
     .number()
     .required('Risk owner is required')
     .positive('Please select a valid owner'),
-  assessor: yup
+  assessor_id: yup
     .number()
     .nullable()
     .positive('Please select a valid assessor'),
-  controls: yup
+  control_ids: yup
     .array()
     .of(yup.number().positive())
     .default([]),
-  risk_type: yup
+  risk_type_id: yup
     .number()
     .nullable()
     .positive('Please select a valid risk type'),
@@ -109,7 +109,7 @@ export const controlSchema = yup.object({
     .number()
     .required('Effectiveness is required')
     .oneOf([0.0, 0.5, 1.0], 'Invalid effectiveness value'),
-  owner: yup
+  owner_id: yup
     .number()
     .required('Control owner is required')
     .positive('Please select a valid owner'),

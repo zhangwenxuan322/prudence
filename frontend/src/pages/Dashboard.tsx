@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ShieldExclamationIcon, 
@@ -12,6 +13,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const stats = [
     {
@@ -143,14 +145,21 @@ const Dashboard: React.FC = () => {
             title="Recent Risks" 
             subtitle="Latest risk entries requiring attention"
             headerAction={
-              <button className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium">
+              <button 
+                onClick={() => navigate('/risks')}
+                className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+              >
                 View All
               </button>
             }
           >
             <div className="space-y-4">
               {recentRisks.map((risk) => (
-                <div key={risk.id} className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
+                <div 
+                  key={risk.id} 
+                  onClick={() => navigate(`/risks/${risk.id}`)}
+                  className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 cursor-pointer"
+                >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                       {risk.description}
@@ -179,25 +188,37 @@ const Dashboard: React.FC = () => {
         >
           <Card title="Quick Actions" subtitle="Common tasks and shortcuts">
             <div className="grid grid-cols-2 gap-4">
-              <button className="p-4 bg-red-50 dark:bg-red-800 hover:bg-red-100 dark:hover:bg-red-700 rounded-lg text-left transition-colors duration-200 group">
+              <button 
+                onClick={() => navigate('/risks/add')}
+                className="p-4 bg-red-50 dark:bg-red-800 hover:bg-red-100 dark:hover:bg-red-700 rounded-lg text-left transition-colors duration-200 group"
+              >
                 <ShieldExclamationIcon className="w-8 h-8 text-red-600 dark:text-red-400 mb-2 group-hover:scale-110 transition-transform duration-200" />
                 <p className="font-medium text-gray-900 dark:text-white">Add Risk</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Create new risk entry</p>
               </button>
               
-              <button className="p-4 bg-green-50 dark:bg-green-800 hover:bg-green-100 dark:hover:bg-green-700 rounded-lg text-left transition-colors duration-200 group">
+              <button 
+                onClick={() => navigate('/controls/add')}
+                className="p-4 bg-green-50 dark:bg-green-800 hover:bg-green-100 dark:hover:bg-green-700 rounded-lg text-left transition-colors duration-200 group"
+              >
                 <ShieldCheckIcon className="w-8 h-8 text-green-600 dark:text-green-400 mb-2 group-hover:scale-110 transition-transform duration-200" />
                 <p className="font-medium text-gray-900 dark:text-white">Add Control</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Create new control</p>
               </button>
               
-              <button className="p-4 bg-yellow-50 dark:bg-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-700 rounded-lg text-left transition-colors duration-200 group">
+              <button 
+                onClick={() => navigate('/risk-matrix')}
+                className="p-4 bg-yellow-50 dark:bg-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-700 rounded-lg text-left transition-colors duration-200 group"
+              >
                 <ClipboardDocumentListIcon className="w-8 h-8 text-yellow-600 dark:text-yellow-400 mb-2 group-hover:scale-110 transition-transform duration-200" />
                 <p className="font-medium text-gray-900 dark:text-white">View Matrix</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Risk assessment matrix</p>
               </button>
               
-              <button className="p-4 bg-purple-50 dark:bg-purple-800 hover:bg-purple-100 dark:hover:bg-purple-700 rounded-lg text-left transition-colors duration-200 group">
+              <button 
+                onClick={() => navigate('/my-items')}
+                className="p-4 bg-purple-50 dark:bg-purple-800 hover:bg-purple-100 dark:hover:bg-purple-700 rounded-lg text-left transition-colors duration-200 group"
+              >
                 <UserGroupIcon className="w-8 h-8 text-purple-600 dark:text-purple-400 mb-2 group-hover:scale-110 transition-transform duration-200" />
                 <p className="font-medium text-gray-900 dark:text-white">My Items</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Assigned risks & controls</p>

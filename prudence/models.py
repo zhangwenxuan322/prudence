@@ -42,6 +42,8 @@ class Control(models.Model):
     owner = models.ForeignKey(
         User, related_name='controls', on_delete=models.SET_NULL, null=True)
     clastassessed = models.DateField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -76,6 +78,10 @@ class Risk(models.Model):
     last_assessed = models.DateField(auto_now=True)
     assessor = models.ForeignKey(
         User, related_name='risks_assigned', on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'L2'})
+    risk_type = models.ForeignKey(
+        RiskType, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Calculate the inherent risk rating if not already set

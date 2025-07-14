@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from accounts.api_views import register_view, login_view, current_user_view, logout_view
 from prudence.api_views import (
     RiskViewSet, ControlViewSet, RiskAssessmentViewSet, 
-    RiskTypeViewSet, ActionViewSet, dashboard_stats
+    RiskTypeViewSet, ActionViewSet, UserViewSet, dashboard_stats
 )
 
 # Create router for viewsets
@@ -15,6 +15,7 @@ router.register(r'controls', ControlViewSet, basename='control')
 router.register(r'risk-assessments', RiskAssessmentViewSet, basename='risk-assessment')
 router.register(r'risk-types', RiskTypeViewSet, basename='risk-type')
 router.register(r'actions', ActionViewSet, basename='action')
+router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
     # Authentication endpoints

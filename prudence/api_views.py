@@ -3,11 +3,15 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q, Count
+from django.contrib.auth import get_user_model
 from .models import Risk, Control, RiskAssessment, RiskType, Action
 from .serializers import (
     RiskSerializer, ControlSerializer, RiskAssessmentSerializer,
     RiskTypeSerializer, ActionSerializer, DashboardStatsSerializer
 )
+from accounts.serializers import UserSerializer
+
+User = get_user_model()
 
 
 class RiskViewSet(viewsets.ModelViewSet):
@@ -15,7 +19,7 @@ class RiskViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Risk.objects.all().select_related('owner', 'assessor', 'risk_type').prefetch_related('controls')
+        queryset = Risk.objects.all().select_related('risk_owner', 'assessor', 'risk_type').prefetch_related('controls')
         
         # Filter by search
         search = self.request.query_params.get('search')
@@ -25,7 +29,7 @@ class RiskViewSet(viewsets.ModelViewSet):
         # Filter by owner
         owner = self.request.query_params.get('owner')
         if owner:
-            queryset = queryset.filter(owner_id=owner)
+            queryset = queryset.filter(risk_owner_id=owner)
         
         # Filter by assessor
         assessor = self.request.query_params.get('assessor')
@@ -43,7 +47,7 @@ class RiskViewSet(viewsets.ModelViewSet):
     def my_risks(self, request):
         """Get risks assigned to the current user"""
         risks = self.get_queryset().filter(
-            Q(owner=request.user) | Q(assessor=request.user)
+            Q(risk_owner=request.user) | Q(assessor=request.user)
         )
         serializer = self.get_serializer(risks, many=True)
         return Response(serializer.data)
@@ -144,6 +148,32 @@ class ActionViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        queryset = User.objects.all()
+        
+        # Filter by role
+        role = self.request.query_params.get('role')
+        if role:
+            queryset = queryset.filter(role=role)
+        
+        # Filter by search
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(username__icontains=search) | 
+                Q(first_name__icontains=search) | 
+                Q(last_name__icontains=search) |
+                Q(email__icontains=search)
+            )
+        
+        return queryset.order_by('first_name', 'last_name')
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def dashboard_stats(request):
@@ -169,7 +199,7 @@ def dashboard_stats(request):
     
     # User's risks and controls
     my_risks = Risk.objects.filter(
-        Q(owner=user) | Q(assessor=user)
+        Q(risk_owner=user) | Q(assessor=user)
     ).count()
     
     my_controls = Control.objects.filter(owner=user).count()

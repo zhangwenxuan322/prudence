@@ -90,12 +90,14 @@ const AppRoutes: React.FC = () => {
         {/* Risk Management Routes */}
         <Route path="risks" element={<RiskList />} />
         <Route path="risks/new" element={<RiskForm />} />
+        <Route path="risks/add" element={<RiskForm />} />
         <Route path="risks/:id" element={<RiskDetail />} />
         <Route path="risks/:id/edit" element={<RiskForm />} />
         
         {/* Control Management Routes */}
         <Route path="controls" element={<ControlList />} />
         <Route path="controls/new" element={<ControlForm />} />
+        <Route path="controls/add" element={<ControlForm />} />
         <Route path="controls/:id/edit" element={<ControlForm />} />
         
         {/* Other Protected Routes */}

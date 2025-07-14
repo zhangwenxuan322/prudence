@@ -87,17 +87,17 @@ export interface RiskForm {
   inherent_impact: number;
   residual_probability: number;
   residual_impact: number;
-  owner: number;
-  assessor?: number;
-  controls: number[];
-  risk_type?: number;
+  owner_id: number;
+  assessor_id?: number;
+  control_ids: number[];
+  risk_type_id?: number;
 }
 
 export interface ControlForm {
   name: string;
   description: string;
   effectiveness: number;
-  owner: number;
+  owner_id: number;
 }
 
 // API Response Types

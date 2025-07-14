@@ -24,8 +24,8 @@ class ControlSerializer(serializers.ModelSerializer):
         model = Control
         fields = '__all__'
 
-    def get_effectiveness_display(self):
-        effectiveness = self.instance.effectiveness
+    def get_effectiveness_display(self, obj):
+        effectiveness = obj.effectiveness
         if effectiveness == 0.0:
             return 'Not Effective'
         elif effectiveness == 0.5:
@@ -36,12 +36,12 @@ class ControlSerializer(serializers.ModelSerializer):
 
 
 class RiskSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)
+    owner = UserSerializer(source='risk_owner', read_only=True)
     assessor = UserSerializer(read_only=True)
     controls = ControlSerializer(many=True, read_only=True)
     risk_type = RiskTypeSerializer(read_only=True)
     
-    owner_id = serializers.IntegerField(write_only=True)
+    owner_id = serializers.IntegerField(source='risk_owner_id', write_only=True)
     assessor_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
     control_ids = serializers.ListField(
         child=serializers.IntegerField(), 

@@ -103,60 +103,60 @@ const ForgotPassword: React.FC = () => {
           </Link>
         </div>
 
-        {/* Logo and Header */}
+        {/* Header */}
         <div className="text-center mb-8">
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-4"
           >
-            <span className="text-white font-bold text-2xl">P</span>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Prudence</h1>
           </motion.div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Reset Password</h1>
-          <p className="text-gray-600">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Reset Password</h2>
+          <p className="text-gray-600 dark:text-gray-400">
             Enter your email address and we'll send you a link to reset your password.
           </p>
         </div>
 
         {/* Reset Form */}
-        <Card className="backdrop-blur-lg bg-white/90 border-white/20">
+        <Card className="backdrop-blur-lg bg-white/90 dark:bg-gray-800/90 border-white/20 dark:border-gray-700/20">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Error Message */}
             {error && (
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="p-4 bg-red-50 border border-red-200 rounded-lg"
+                className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
               >
-                <p className="text-sm text-red-600">{error}</p>
+                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               </motion.div>
             )}
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400" />
+                  <EnvelopeIcon className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                 </div>
                 <input
                   {...register('email')}
                   type="email"
                   id="email"
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                     errors.email
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-gray-300 hover:border-gray-400 focus:border-primary-500'
+                      ? 'border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20'
+                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-primary-500'
                   }`}
                   placeholder="Enter your email address"
                   autoComplete="email"
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
               )}
             </div>
 
@@ -173,17 +173,17 @@ const ForgotPassword: React.FC = () => {
 
             {/* Additional Help */}
             <div className="text-center space-y-2">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Remember your password?{' '}
                 <Link
                   to="/login"
-                  className="font-medium text-primary-600 hover:text-primary-700 transition-colors duration-200"
+                  className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200"
                 >
                   Sign in
                 </Link>
               </p>
               
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Need help? Contact your system administrator.
               </p>
             </div>
@@ -191,7 +191,7 @@ const ForgotPassword: React.FC = () => {
         </Card>
 
         {/* Security Notice */}
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <div className="flex items-start">
             <div className="flex-shrink-0">
               <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
@@ -199,8 +199,8 @@ const ForgotPassword: React.FC = () => {
               </div>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">Security Notice</h3>
-              <p className="text-xs text-blue-600 mt-1">
+              <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300">Security Notice</h3>
+              <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
                 For security reasons, we don't reveal whether an email address is registered with us.
                 You'll receive an email only if the address is in our system.
               </p>
@@ -210,7 +210,7 @@ const ForgotPassword: React.FC = () => {
 
         {/* Footer */}
         <div className="text-center mt-8">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             © 2024 Prudence Risk Management. All rights reserved.
           </p>
         </div>

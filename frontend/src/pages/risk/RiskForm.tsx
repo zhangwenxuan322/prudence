@@ -1,12 +1,4 @@
-import React from 'react';
+import AddRisk from './AddRisk';
 
-const RiskForm: React.FC = () => {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900">RiskForm</h1>
-      <p className="text-gray-600">Coming soon...</p>
-    </div>
-  );
-};
-
-export default RiskForm;
+// Re-export AddRisk as RiskForm for backward compatibility
+export default AddRisk;
